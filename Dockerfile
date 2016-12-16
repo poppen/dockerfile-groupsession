@@ -24,7 +24,7 @@ RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz \
     && echo "Asia/Tokyo" > /etc/timezone \
     && apk del .build-deps
 
-VOLUME ["/home/gsession/db", "/home/gsession/file", "/home/gsession/backup", "/home/gsession/filekanri", "/home/gsession/webmail"]
+VOLUME ["/home/gsession"]
 EXPOSE 8080
 ENTRYPOINT [ \
     "codep", \
