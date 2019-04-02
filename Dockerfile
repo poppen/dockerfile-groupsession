@@ -1,12 +1,12 @@
-FROM tomcat:8.5-alpine
-MAINTAINER MATSUI Shinsuke <poppen.jp@gmail.com>
+FROM poppen/adoptopenjdk-tomcat:tomcat9-openjdk12-openj9
 
-ARG GSESSION_VERSION=4.6.3
+ARG GSESSION_VERSION=4.9.2
 ARG ENTRYKIT_VERSION=0.4.0
 
 ADD https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz $CATALINA_HOME
 ADD http://dl1.gs.sjts.co.jp/v4/download/files/${GSESSION_VERSION}/gsession.war ${CATALINA_HOME}/webapps/
-
+# COPY entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz $CATALINA_HOME
+# COPY gsession.war ${CATALINA_HOME}/webapps/
 COPY run.sh /
 COPY gsdata.conf /tmp/
 
@@ -15,14 +15,7 @@ RUN tar -xvzf entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz \
     && mv entrykit /bin/entrykit \
     && chmod +x /bin/entrykit \
     && entrykit --symlink \
-    && chmod +x /run.sh \
-    && apk --no-cache add --virtual .build-deps \
-        tzdata \
-    && apk --no-cache add \
-        curl \
-    && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-    && echo "Asia/Tokyo" > /etc/timezone \
-    && apk del .build-deps
+    && chmod +x /run.sh
 
 VOLUME ["/home/gsession"]
 EXPOSE 8080
